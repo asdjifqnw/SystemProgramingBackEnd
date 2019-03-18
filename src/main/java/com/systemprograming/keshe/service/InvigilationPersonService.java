@@ -16,11 +16,11 @@ public interface InvigilationPersonService extends JpaRepository<InvigilationPer
     @Query(nativeQuery = true, value = "SELECT invigilationid,COUNT(invigilationid) from invigilation_person GROUP BY invigilationid")
     List<Map<String, Object>> selectAllInvigilationPersonInfo();
 
-    @Query(nativeQuery = true, value = "SELECT user_name,position,phone_number from user where userid in (SELECT user_id from invigilation_person where invigilationID = ?1)")
+    @Query(nativeQuery = true, value = "SELECT userID,user_name,position,phone_number from user where userid in (SELECT user_id from invigilation_person where invigilationID = ?1)")
     List<Map<String, Object>> findInvigilationPersonInfo(Integer userid);
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM invigilation_info WHERE invigilation_info.invigilationid = ?1", nativeQuery = true)
-    void deleteInvigilation(Integer id);
+    @Query(value = "delete from invigilation_person where invigilationid = ?1 and user_id = ?2", nativeQuery = true)
+    void deleteInvigilationPerson(Integer invigilationid,Integer userID);
 }

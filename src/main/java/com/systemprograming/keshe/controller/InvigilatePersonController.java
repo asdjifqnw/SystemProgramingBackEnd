@@ -95,17 +95,18 @@ public class InvigilatePersonController {
         List<Map<String, Object>> list = invigilationPersonService.findInvigilationPersonInfo(id);
 //        log.info(id.toString());
 //        log.info(list.get(0).toString());
-        jsonObject.put("info",list);
+        jsonObject.put("info", list);
         return jsonObject;
     }
+
     @AdminAccess
     @PostMapping("/deleteInvigilatePerson")
-    public Object deleteInvigilatePerson(@RequestParam Integer id) {
+    public Object deleteInvigilatePerson(@RequestParam Integer invigilationid, @RequestParam Integer userID) {
         JSONObject jsonObject = new JSONObject();
-        List<Map<String, Object>> list = invigilationPersonService.findInvigilationPersonInfo(id);
-//        log.info(id.toString());
-//        log.info(list.get(0).toString());
-        jsonObject.put("info",list);
+//        log.info(invigilationid.toString()+userID.toString());
+        invigilationPersonService.deleteInvigilationPerson(invigilationid, userID);
+        jsonObject.put("stateCode", 200);
+        jsonObject.put("msg", "删除成功");
         return jsonObject;
     }
 }
