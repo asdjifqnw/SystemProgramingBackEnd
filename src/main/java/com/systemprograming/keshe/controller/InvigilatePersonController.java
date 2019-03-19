@@ -3,6 +3,9 @@ package com.systemprograming.keshe.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.systemprograming.keshe.annotation.AdminAccess;
 import com.systemprograming.keshe.dao.entity.InvigilationInfo;
+import com.systemprograming.keshe.dao.entity.User;
+import com.systemprograming.keshe.other.UserWithAllocated;
+import com.systemprograming.keshe.service.CRUDTest;
 import com.systemprograming.keshe.service.InvigilationPersonService;
 import com.systemprograming.keshe.service.InvigilationService;
 import lombok.Value;
@@ -12,15 +15,9 @@ import org.assertj.core.util.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -30,14 +27,17 @@ public class InvigilatePersonController {
     InvigilationPersonService invigilationPersonService;
     @Autowired
     InvigilationService invigilationService;
+    @Autowired
+    CRUDTest crudTest;
 
     @GetMapping("/test1")
-    public void test() {
-//        System.out.println(invigilationPersonService.selectAllInvigilationPersonInfo().get(0).get("COUNT(invigilationid)"));
-
+    public Object test() {
+        List<User> list1 = crudTest.findAll();
+        List<Map<String, Object>> list2 = invigilationPersonService.findUserallocatedNumberOfInvigilation();
+        return list2;
     }
 
-    public static <T> Map<String, Object> beanToMap(T bean) {
+    private static <T> Map<String, Object> beanToMap(T bean) {
         Map<String, Object> map = new HashMap<>();
         if (bean != null) {
             BeanMap beanMap = BeanMap.create(bean);
@@ -109,5 +109,62 @@ public class InvigilatePersonController {
         jsonObject.put("msg", "删除成功");
         return jsonObject;
     }
+
+    @AdminAccess
+    @PostMapping("/insertInvigilatePerson")
+    public Object insertInvigilatePerson(@RequestParam Integer invigilationid, @RequestParam Integer userID) {
+        JSONObject jsonObject = new JSONObject();
+        if (invigilationPersonService.allocatedNumberOfTeacher(invigilationid) == null) {
+            invigilationPersonService.insertInvigilatePerson(invigilationid, userID);
+            jsonObject.put("stateCode", 200);
+            jsonObject.put("msg", "添加成功");
+            return jsonObject;
+        } else if (invigilationPersonService.allocatedNumberOfTeacher(invigilationid) >= invigilationPersonService.needNumberOfTeacher(invigilationid)) {
+            jsonObject.put("stateCode", 401);
+            jsonObject.put("msg", "添加失败,超过上限");
+            return jsonObject;
+        }
+        invigilationPersonService.insertInvigilatePerson(invigilationid, userID);
+        jsonObject.put("stateCode", 200);
+        jsonObject.put("msg", "添加成功");
+        return jsonObject;
+    }
+
+    //获取所有用户和已分配多少次
+    @AdminAccess
+    @GetMapping("/getUserNumberOfAllocatedInvigilation")
+    public Object getUserNumberOfAllocatedInvigilation() {
+        JSONObject jsonObject = new JSONObject();
+        List<User> list1 = crudTest.findAll();
+        List<Map<String, Object>> list2 = invigilationPersonService.findUserallocatedNumberOfInvigilation();
+        int i, j = 0;
+        List<Object> list = new ArrayList<>();
+        for (i = 0; i < list1.size(); i++) {
+            Map<String, Object> map = beanToMap(list1.get(i));
+            if (j < list2.size()) {
+                log.info(list1.get(i).getUserID().toString());
+                log.info(list2.get(j).get("user_id").toString());
+                if (list1.get(i).getUserID() == list2.get(j).get("user_id")) {
+                    log.info("simple");
+                    map.put("arranged", list2.get(j).get("COUNT(user_id)"));
+                    list.add(map);
+                    log.info("i= " + i + " j = " + j);
+                    j++;
+                } else {
+                    log.info("NOTsimple");
+                    map.put("arranged", 0);
+                    list.add(map);
+                    log.info("i= " + i + " j = " + j);
+                }
+            } else {
+                log.info("invigilationPersonList out of bound");
+                map.put("arranged", 0);
+                list.add(map);
+            }
+        }
+        jsonObject.put("info", list);
+        return jsonObject;
+    }
+
 }
 
