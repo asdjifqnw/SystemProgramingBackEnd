@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -14,7 +15,7 @@ import java.util.Date;
 @Entity
 @EqualsAndHashCode
 @ToString
-public class taskInfo {
+public class TaskInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer taskID;
@@ -29,16 +30,16 @@ public class taskInfo {
                     "DEFAULT CURRENT_TIMESTAMP",
             updatable = false,
             insertable = false)
-    private LocalDate insertTime;
+    private LocalDateTime insertTime;
     @Column(nullable = false,
             columnDefinition = "DATETIME NOT NULL " +
                     "DEFAULT CURRENT_TIMESTAMP ON UPDATE " +
                     "CURRENT_TIMESTAMP",
             updatable = false,
             insertable = false)
-    private LocalDate updateTime;
+    private LocalDateTime updateTime;
     @Column(nullable = false)
-    private LocalDate taskDeadline;
+    private LocalDateTime taskDeadline;
     @Column(nullable = false)
     private boolean isOpen;
 }

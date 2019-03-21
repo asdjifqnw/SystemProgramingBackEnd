@@ -30,8 +30,8 @@ public class InvigilationController {
                                         @RequestParam Integer numberOfTeacher,
                                         @RequestParam String beginTime) {
         JSONObject jsonObject = new JSONObject();
-        beginTime = beginTime.replace("T", " ");
-        beginTime = beginTime.replace(".000Z", "");
+//        beginTime = beginTime.replace("T", " ");
+//        beginTime = beginTime.replace(".000Z", "");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime ldt = LocalDateTime.parse(beginTime, df);
         System.out.println("String类型的时间转成LocalDateTime：" + ldt);
