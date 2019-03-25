@@ -1,6 +1,5 @@
 package com.systemprograming.keshe.service;
 
-import com.systemprograming.keshe.controller.InvigilationController;
 import com.systemprograming.keshe.dao.entity.InvigilationInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

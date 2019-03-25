@@ -11,3 +11,7 @@ spring:
     show-sql: true
 #    hibernate:
 #      ddl-auto: create
+fileValues:
+  server:
+    MaxFileSize: 300MB
+    MaxRequestSize: 500MB

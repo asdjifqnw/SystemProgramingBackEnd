@@ -1,5 +1,6 @@
 package com.systemprograming.keshe.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -35,7 +36,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     Login login;
     @Autowired
     AddNewUser addNewUser;
-    @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("Authorization");// 从 http 请求头中取出 token
         // 如果不是映射到方法直接通过
@@ -65,7 +65,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     phoneNumber = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new RuntimeException("401");
+                    throw new RuntimeException();
                 }
                 List<UserNameAndPassword> list = login.findByPhoneNumber(phoneNumber);
 //                log.info(list.get(0).getPassword());

@@ -1,4 +1,4 @@
-package com.systemprograming.keshe.controller;
+package com.systemprograming.keshe.controller.Admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.systemprograming.keshe.annotation.AdminAccess;
@@ -20,11 +20,6 @@ import java.util.List;
 public class TaskInfoController {
     @Autowired
     TaskInfoService taskInfoService;
-
-    @GetMapping("/23")
-    public List<TaskInfo> test() {
-        return taskInfoService.findAll();
-    }
 
     @AdminAccess
     @PostMapping("/insertNewTask")

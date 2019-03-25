@@ -1,4 +1,4 @@
-package com.systemprograming.keshe.controller;
+package com.systemprograming.keshe.controller.Admin;
 
 import com.alibaba.fastjson.JSONObject;
 import com.systemprograming.keshe.annotation.AdminAccess;
@@ -35,7 +35,7 @@ public class UserInfoController {
      * 3,执行插入，返回结果
      */
     @PostMapping("/addNewUser")
-    @SuperAdminAccess
+    @AdminAccess
     public Object addNewUser(@RequestParam String userName,
                              @RequestParam String userPosition,
                              @RequestParam String userPhoneNumber,

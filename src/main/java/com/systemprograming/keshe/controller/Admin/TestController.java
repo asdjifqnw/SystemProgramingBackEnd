@@ -1,4 +1,4 @@
-package com.systemprograming.keshe.controller;
+package com.systemprograming.keshe.controller.Admin;
 
 import com.systemprograming.keshe.service.CRUDTest;
 import org.springframework.beans.factory.annotation.Autowired;
